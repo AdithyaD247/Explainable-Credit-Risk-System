@@ -1,3 +1,5 @@
+import shap
+import matplotlib.pyplot as plt
 import sys
 from pathlib import Path
 
@@ -35,6 +37,8 @@ def load_data():
     )
 
 model = load_model()
+explainer = shap.TreeExplainer(model)
+
 df = load_data()
 
 from langchain_community.vectorstores import Chroma
@@ -49,7 +53,9 @@ def load_vectorstore():
     )
 
     vectorstore = Chroma(
-        persist_directory="rag/vectordb",
+        persist_directory=str(
+            project_root / "rag" / "vectordb"
+        ),
         embedding_function=embeddings
     )
 
@@ -73,7 +79,7 @@ st.subheader("Select Applicant")
 applicant_index = st.number_input(
     "Applicant Index",
     min_value=0,
-    max_value=len(df)-1,
+    max_value=len(df) - 1,
     value=0,
     step=1
 )
@@ -90,6 +96,8 @@ sample = df.drop(
     axis=1
 ).iloc[[int(applicant_index)]]
 
+shap_values = explainer.shap_values(sample)
+
 probability = model.predict_proba(
     sample
 )[0][1]
@@ -101,15 +109,15 @@ elif probability < 0.50:
 else:
     risk_level = "High Risk"
 
-col1, col2 = st.columns(2)
+metric_col1, metric_col2 = st.columns(2)
 
-with col1:
+with metric_col1:
     st.metric(
         "Default Probability",
         f"{probability * 100:.2f}%"
     )
 
-with col2:
+with metric_col2:
     st.metric(
         "Risk Level",
         risk_level
@@ -117,19 +125,101 @@ with col2:
 
 st.divider()
 
-st.subheader("Applicant Features")
+col1, col2 = st.columns(2)
 
-feature_cols = [
-    "CREDIT_INCOME_RATIO",
-    "ANNUITY_INCOME_RATIO",
-    "AGE_YEARS",
-    "EMPLOYMENT_YEARS"
-]
+with col1:
 
-st.dataframe(
-    sample[feature_cols].T.rename(
-        columns={sample.index[0]: "Value"}
+    st.subheader("Applicant Features")
+
+    feature_cols = [
+        "CREDIT_INCOME_RATIO",
+        "ANNUITY_INCOME_RATIO",
+        "AGE_YEARS",
+        "EMPLOYMENT_YEARS"
+    ]
+
+    feature_df = sample[feature_cols].T
+    feature_df.columns = ["Value"]
+
+    st.dataframe(
+        feature_df,
+        use_container_width=True
     )
+
+with col2:
+
+    st.subheader("SHAP Explanation")
+
+    shap_df = pd.DataFrame({
+        "Feature": sample.columns,
+        "SHAP Value": shap_values[0]
+    })
+
+    shap_df["Impact"] = shap_df["SHAP Value"].abs()
+
+    top_features = (
+        shap_df
+        .sort_values(
+            "Impact",
+            ascending=False
+        )
+        .head(10)
+    )
+
+    top_features["Direction"] = top_features[
+        "SHAP Value"
+    ].apply(
+        lambda x:
+        "↑ Increases Risk"
+        if x > 0
+        else "↓ Decreases Risk"
+    )
+
+    st.dataframe(
+        top_features[
+            [
+                "Feature",
+                "SHAP Value",
+                "Direction"
+            ]
+        ],
+        use_container_width=True
+    )
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+chart_data = (
+    top_features
+    .sort_values("SHAP Value")
+)
+
+ax.barh(
+    chart_data["Feature"],
+    chart_data["SHAP Value"]
+)
+
+ax.set_title(
+    "Top SHAP Feature Contributions"
+)
+
+ax.set_xlabel(
+    "SHAP Value"
+)
+
+plt.tight_layout()
+
+st.pyplot(fig)
+
+st.info(
+    """
+    SHAP Interpretation
+
+    • Positive SHAP values increase default risk.
+
+    • Negative SHAP values decrease default risk.
+
+    • Larger absolute SHAP values have a stronger influence on the prediction.
+    """
 )
 
 st.divider()
@@ -184,6 +274,9 @@ if st.button("Generate Credit Risk Report"):
 
     IMPORTANT FEATURE DEFINITIONS
 
+    - AGE_YEARS represents applicant age.
+    - EMPLOYMENT_YEARS represents employment duration.
+    - Risk Level is produced by the machine learning model.
     - CREDIT_INCOME_RATIO = AMT_CREDIT / AMT_INCOME_TOTAL
     - ANNUITY_INCOME_RATIO = AMT_ANNUITY / AMT_INCOME_TOTAL
 
