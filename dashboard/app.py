@@ -113,14 +113,14 @@ metric_col1, metric_col2 = st.columns(2)
 
 with metric_col1:
     st.metric(
-        "Default Probability",
-        f"{probability * 100:.2f}%"
+        label="Default Probability",
+        value=f"{probability * 100:.2f}%"
     )
 
 with metric_col2:
     st.metric(
-        "Risk Level",
-        risk_level
+        label="Risk Level",
+        value=risk_level
     )
 
 st.divider()
@@ -163,7 +163,7 @@ with col2:
             "Impact",
             ascending=False
         )
-        .head(10)
+        .head(5)
     )
 
     top_features["Direction"] = top_features[
@@ -175,35 +175,56 @@ with col2:
         else "↓ Decreases Risk"
     )
 
-    st.dataframe(
-        top_features[
-            [
-                "Feature",
-                "SHAP Value",
-                "Direction"
-            ]
-        ],
-        use_container_width=True
+    display_shap = top_features[
+        ["Feature", "SHAP Value", "Direction"]
+    ].copy()
+
+    display_shap["SHAP Value"] = (
+        display_shap["SHAP Value"]
+        .round(3)
     )
 
-fig, ax = plt.subplots(figsize=(8, 5))
+    st.dataframe(
+        display_shap,
+        use_container_width=True,
+        hide_index=True
+    )
 
-chart_data = (
-    top_features
-    .sort_values("SHAP Value")
-)
+fig, ax = plt.subplots(figsize=(6, 3.5))
 
-ax.barh(
+chart_data = top_features.sort_values("SHAP Value")
+
+bars = ax.barh(
     chart_data["Feature"],
     chart_data["SHAP Value"]
 )
 
+# Smaller fonts
 ax.set_title(
-    "Top SHAP Feature Contributions"
+    "Top SHAP Feature Contributions",
+    fontsize=11,
+    pad=10
 )
 
 ax.set_xlabel(
-    "SHAP Value"
+    "SHAP Value",
+    fontsize=9
+)
+
+ax.tick_params(
+    axis="both",
+    labelsize=8
+)
+
+# Cleaner look
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+# Light grid
+ax.grid(
+    axis="x",
+    linestyle="--",
+    alpha=0.3
 )
 
 plt.tight_layout()
@@ -245,6 +266,13 @@ if st.button("Generate Credit Risk Report"):
         [doc.page_content for doc in results]
     )
 
+    top_shap_text = "\n".join(
+        [
+            f"- {row.Feature}: SHAP={row['SHAP Value']:.3f}"
+            for _, row in top_features.head(5).iterrows()
+        ]
+    )
+    
     prompt = f"""
     You are an expert Credit Risk Analyst.
 
@@ -272,6 +300,10 @@ if st.button("Generate Credit Risk Report"):
 
     {context}
 
+    Top Model Factors (SHAP):
+
+    {top_shap_text}
+
     IMPORTANT FEATURE DEFINITIONS
 
     - AGE_YEARS represents applicant age.
@@ -286,16 +318,49 @@ if st.button("Generate Credit Risk Report"):
     Do NOT invent missing information.
     Use only the supplied applicant features.
 
-    Generate a professional credit risk assessment report.
+    Generate a professional banking-style credit risk assessment report.
 
-    Include:
+    Use ONLY the provided applicant information and retrieved policies.
 
-    1. Risk Level
-    2. Prediction Summary
-    3. Positive Risk Indicators
-    4. Negative Risk Indicators
-    5. Relevant Lending Policies
-    6. Final Recommendation
+    IMPORTANT:
+    - Do not invent dates.
+    - Do not invent applicant IDs.
+    - Do not invent financial information.
+    - Keep the report concise and professional.
+    - Use bullet points where appropriate.
+
+    Report Format:
+
+    ## Executive Summary
+
+    Provide a 2-3 sentence summary of the applicant's risk profile.
+
+    ## Risk Classification
+
+    - Predicted Default Probability
+    - Risk Level
+
+    ## Key Positive Indicators
+
+    List positive factors that support loan approval.
+
+    ## Key Risk Indicators
+
+    List factors that increase lending risk.
+
+    ## Relevant Lending Policies
+
+    Mention only the retrieved policies that directly apply.
+
+    ## Recommendation
+
+    Provide one of:
+    - Approve
+    - Approve with Review
+    - Manual Review Required
+    - Reject
+
+    Include a short justification.
     """
 
     response = client.models.generate_content(
