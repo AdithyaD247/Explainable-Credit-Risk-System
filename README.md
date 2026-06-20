@@ -139,7 +139,7 @@ The Streamlit dashboard provides an end-to-end credit risk assessment workflow.
 
 #### Diagram
 
-![Architecture Diagram](reports/screenshots/medium_risk_applicant/architecture diagram.png)
+![Architecture Diagram](reports/screenshots/medium_risk_applicant/architecture_diagram.png)
 
 ---
 
