@@ -1,0 +1,27 @@
+Risk Classification Rules
+
+Low Risk:
+
+* Predicted default probability below 20 percent.
+* Strong external credit scores.
+* Stable employment and income.
+
+Medium Risk:
+
+* Predicted default probability between 20 percent and 50 percent.
+* Moderate debt burden.
+* Some financial risk indicators present.
+
+High Risk:
+
+* Predicted default probability above 50 percent.
+* Weak external credit scores.
+* High debt-to-income ratio.
+* Limited employment history.
+
+Additional Risk Indicators:
+
+* High credit-to-income ratio.
+* Short employment duration.
+* Multiple prior defaults.
+* Low external credit score values.

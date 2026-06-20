@@ -1,0 +1,17 @@
+Lending Policies
+
+1. Applicants with a debt-to-income ratio greater than 40 percent should undergo manual review.
+
+2. Applicants requesting loans above approved thresholds require additional verification.
+
+3. Employment duration below one year may increase lending risk.
+
+4. Applicants with unstable income sources should receive enhanced risk assessment.
+
+5. Higher loan amounts require stronger evidence of repayment capability.
+
+6. Borrowers with consistent income and repayment history are preferred.
+
+7. Loan approval decisions should consider both model predictions and lending policy guidelines.
+
+8. Risk classifications should be categorized as Low Risk, Medium Risk, and High Risk.

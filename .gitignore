@@ -249,3 +249,6 @@ shap_outputs/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# API Keys
+config.py
