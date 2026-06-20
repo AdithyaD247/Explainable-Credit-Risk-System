@@ -41,7 +41,7 @@ The system predicts the probability of loan default, explains the factors influe
 
 ## 🏗️ System Architecture
 
-![Architecture Diagram](reports/diagrams/architecture_diagram.png)
+![Architecture Diagram](reports/screenshots/architecture_diagram.png)
 
 ---
 
@@ -123,7 +123,7 @@ The Streamlit dashboard provides an end-to-end credit risk assessment workflow.
 
 #### Dashboard
 
-![Low Risk Dashboard](reports/screenshots/low_risk_applicant/low_risk_dashboard)
+![Low Risk Dashboard](reports/screenshots/low_risk_applicant)
 
 ---
 
@@ -131,7 +131,7 @@ The Streamlit dashboard provides an end-to-end credit risk assessment workflow.
 
 #### Dashboard
 
-![Medium Risk Dashboard](reports/screenshots/medium_risk_applicant/medium_risk_dashboard)
+![Medium Risk Dashboard](reports/screenshots/medium_risk_applicant)
 
 ---
 
@@ -139,7 +139,7 @@ The Streamlit dashboard provides an end-to-end credit risk assessment workflow.
 
 #### Diagram
 
-![Architecture Diagram](reports/screenshots/medium_risk_applicant/architecture_diagram.png)
+![Architecture Diagram](reports/screenshots/architecture_diagram.png)
 
 ---
 
