@@ -225,7 +225,7 @@ streamlit run dashboard/app.py
 Project: **Explainable Credit Risk System using XGBoost, SHAP, RAG and Gemini**
 
 GitHub: 
-https://github.com/AdithyaD247/Explainable-Credit-Risk-System
+https://github.com/AdithyaD247
 
 
 
