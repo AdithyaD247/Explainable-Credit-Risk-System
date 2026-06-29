@@ -1,5 +1,4 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[codz]
 *$py.class
 
@@ -217,11 +216,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Environment Variables
-.env
-
 # Virtual Environments
-venv/
 .venv/
 
 # Python Cache
@@ -235,20 +230,13 @@ __pycache__/
 data/raw/
 data/processed/
 
-# Trained Models
-*.pkl
-*.joblib
-
-# Vector Databases
-vectordb/
-chroma_db/
-
-# Temporary Outputs
-shap_outputs/
-
 # OS Files
 .DS_Store
 Thumbs.db
 
-# API Keys
-config.py
+# Streamlit cache
+.streamlit/cache/
+
+# macOS metadata
+.AppleDouble
+.LSOverride

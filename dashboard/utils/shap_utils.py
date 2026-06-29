@@ -22,6 +22,29 @@ def get_top_shap_features(shap_values, sample, top_n=10):
         .head(top_n)
     )
 
+def format_shap_table(top_features, decimals=3):
+    """
+    Formats SHAP values for display in the dashboard.
+    """
+
+    display_shap = top_features.copy()
+
+    display_shap["Direction"] = display_shap["SHAP Value"].apply(
+        lambda x: (
+            "↑ Increases Risk"
+            if x > 0
+            else "↓ Decreases Risk"
+        )
+    )
+
+    display_shap["SHAP Value"] = (
+        display_shap["SHAP Value"]
+        .round(decimals)
+    )
+
+    return display_shap[
+        ["Feature", "SHAP Value", "Direction"]
+    ]
 
 def plot_shap_bar(top_features):
     """
