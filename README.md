@@ -6,8 +6,8 @@
 ![SHAP](https://img.shields.io/badge/SHAP-Explainable%20AI-orange)
 ![Google Gemini](https://img.shields.io/badge/Google-Gemini%202.5%20Flash-blueviolet)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![GitHub stars](https://img.shields.io/github/stars/AdithyaD247/Explainable-Credit-Risk-System?style=social)
-![GitHub forks](https://img.shields.io/github/forks/AdithyaD247/Explainable-Credit-Risk-System?style=social)
+![GitHub stars](https://img.shields.io/github/stars/AdithyaD247/Explainable-Credit-Risk-System?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/AdithyaD247/Explainable-Credit-Risk-System?style=for-the-badge)
 
 > **An AI-powered credit risk assessment system that predicts loan default probability, explains every prediction using SHAP, retrieves relevant lending policies using Retrieval-Augmented Generation (RAG), and generates professional PDF credit risk reports through an interactive Streamlit dashboard.**
 
