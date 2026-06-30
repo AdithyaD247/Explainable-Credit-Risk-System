@@ -41,18 +41,8 @@ manual_features = load_manual_features()
 
 df = load_data()
 
-@st.cache_resource
-def load_explainers(dataset_model, manual_model):
-
-    return (
-        shap.TreeExplainer(dataset_model),
-        shap.TreeExplainer(manual_model)
-    )
-
-dataset_explainer, manual_explainer = load_explainers(
-    dataset_model,
-    manual_model
-)
+dataset_explainer = shap.TreeExplainer(dataset_model)
+manual_explainer = shap.TreeExplainer(manual_model)
 
 # =====================================
 # Initialize Application
